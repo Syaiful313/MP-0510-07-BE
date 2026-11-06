@@ -26,6 +26,10 @@ export const cloudinaryUpload = (
     streamifier.createReadStream(file.buffer).pipe(uploadStream);
   });
 };
+
+export const cloudinaryUploadFromUrl = (url: string, publicId: string) =>
+  cloudinary.uploader.upload(url, { public_id: publicId, overwrite: true });
+
 const extractPublicIdFromUrl = (url: string) => {
   const UrlParts = url.split("/");
   const publicIdWithExtension = UrlParts[UrlParts.length - 1];

@@ -9,6 +9,7 @@
   "scripts": {
     "postinstall": "prisma generate",
     "build": "tsc",
+    "db:seed": "prisma db seed",
     "format": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern \"src/**/*\" \"api/**/*\" \"*.json\" \"*.ts\" && prisma format",
     "start": "tsx src/index.ts",
     "dev": "nodemon --exec tsx src/index.ts"
