@@ -1,137 +1,132 @@
 import { TransactionStatus } from "../generated/prisma/client";
 import prisma from "./prisma";
-import cron from "node-cron";
 
-// Function untuk mengexpire transaksi yang belum upload bukti pembayaran setelah 2 jam
-const expireTransactions = async () => {
-  try {
-    const expiredTransactions = await prisma.transaction.findMany({
-      where: {
-        status: TransactionStatus.WAITING_FOR_PAYMENT,
-        expiresAt: {
-          lt: new Date(), // Gunakan expiresAt daripada createdAt
+const UNCONFIRMED_TRANSACTION_AGE_MS = 3 * 24 * 60 * 60 * 1000;
+
+export const expireTransactions = async () => {
+  const now = new Date();
+  const expiredTransactions = await prisma.transaction.findMany({
+    where: {
+      status: TransactionStatus.WAITING_FOR_PAYMENT,
+      expiresAt: { lt: now },
+    },
+    select: {
+      id: true,
+      userId: true,
+      eventId: true,
+      couponId: true,
+      pointsUsed: true,
+      quantity: true,
+    },
+  });
+  let expiredCount = 0;
+
+  for (const transaction of expiredTransactions) {
+    const didExpire = await prisma.$transaction(async (tx) => {
+      // Claim the transaction by status so overlapping runs cannot restore resources twice.
+      const updated = await tx.transaction.updateMany({
+        where: {
+          id: transaction.id,
+          status: TransactionStatus.WAITING_FOR_PAYMENT,
+          expiresAt: { lt: now },
         },
-      },
-      include: {
-        user: true, // Include user untuk rollback points
-      },
+        data: { status: TransactionStatus.EXPIRED },
+      });
+
+      if (!updated.count) return false;
+
+      await tx.event.update({
+        where: { id: transaction.eventId },
+        data: { avaliableSeats: { increment: transaction.quantity } },
+      });
+
+      if (transaction.pointsUsed > 0) {
+        await tx.user.update({
+          where: { id: transaction.userId },
+          data: { totalPoints: { increment: transaction.pointsUsed } },
+        });
+      }
+
+      if (transaction.couponId) {
+        await tx.coupon.update({
+          where: { id: transaction.couponId },
+          data: { isUsed: false },
+        });
+      }
+
+      return true;
     });
 
-    for (const transaction of expiredTransactions) {
-      // Gunakan prisma.$transaction untuk atomic operations
-      await prisma.$transaction(async (tx) => {
-        // Update status transaksi
-        await tx.transaction.update({
-          where: { id: transaction.id },
-          data: {
-            status: TransactionStatus.EXPIRED,
-          },
-        });
-
-        // Kembalikan kursi yang tersedia sesuai quantity
-        await tx.event.update({
-          where: { id: transaction.eventId },
-          data: {
-            avaliableSeats: {
-              increment: transaction.quantity,
-            },
-          },
-        });
-
-        // Kembalikan points jika digunakan
-        if (transaction.pointsUsed > 0) {
-          await tx.user.update({
-            where: { id: transaction.userId },
-            data: {
-              totalPoints: {
-                increment: transaction.pointsUsed,
-              },
-            },
-          });
-        }
-
-        // Kembalikan status kupon ke unused jika menggunakan kupon
-        if (transaction.couponId) {
-          await tx.coupon.update({
-            where: { id: transaction.couponId },
-            data: { isUsed: false },
-          });
-        }
-      });
-    }
-  } catch (error) {
-    console.error("Error in expireTransactions:", error);
+    if (didExpire) expiredCount += 1;
   }
+
+  return expiredCount;
 };
 
-// Function untuk membatalkan transaksi yang belum dikonfirmasi dalam 3 hari
-const cancelUnconfirmedTransactions = async () => {
-  try {
-    const unconfirmedTransactions = await prisma.transaction.findMany({
-      where: {
-        status: TransactionStatus.WAITING_FOR_ADMIN_CONFIRMATION,
-        createdAt: {
-          lt: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // 3 hari yang lalu
+export const cancelUnconfirmedTransactions = async () => {
+  const cutoff = new Date(Date.now() - UNCONFIRMED_TRANSACTION_AGE_MS);
+  const unconfirmedTransactions = await prisma.transaction.findMany({
+    where: {
+      status: TransactionStatus.WAITING_FOR_ADMIN_CONFIRMATION,
+      createdAt: { lt: cutoff },
+    },
+    select: {
+      id: true,
+      userId: true,
+      eventId: true,
+      couponId: true,
+      pointsUsed: true,
+      quantity: true,
+    },
+  });
+  let canceledCount = 0;
+
+  for (const transaction of unconfirmedTransactions) {
+    const didCancel = await prisma.$transaction(async (tx) => {
+      const updated = await tx.transaction.updateMany({
+        where: {
+          id: transaction.id,
+          status: TransactionStatus.WAITING_FOR_ADMIN_CONFIRMATION,
+          createdAt: { lt: cutoff },
         },
-      },
-      include: {
-        user: true,
-      },
+        data: { status: TransactionStatus.CANCELED },
+      });
+
+      if (!updated.count) return false;
+
+      await tx.event.update({
+        where: { id: transaction.eventId },
+        data: { avaliableSeats: { increment: transaction.quantity } },
+      });
+
+      if (transaction.pointsUsed > 0) {
+        await tx.user.update({
+          where: { id: transaction.userId },
+          data: { totalPoints: { increment: transaction.pointsUsed } },
+        });
+      }
+
+      if (transaction.couponId) {
+        await tx.coupon.update({
+          where: { id: transaction.couponId },
+          data: { isUsed: false },
+        });
+      }
+
+      return true;
     });
 
-    for (const transaction of unconfirmedTransactions) {
-      await prisma.$transaction(async (tx) => {
-        // Update status transaksi
-        await tx.transaction.update({
-          where: { id: transaction.id },
-          data: {
-            status: TransactionStatus.CANCELED,
-          },
-        });
-
-        // Kembalikan kursi yang tersedia sesuai quantity
-        await tx.event.update({
-          where: { id: transaction.eventId },
-          data: {
-            avaliableSeats: {
-              increment: transaction.quantity,
-            },
-          },
-        });
-
-        // Kembalikan points jika digunakan
-        if (transaction.pointsUsed > 0) {
-          await tx.user.update({
-            where: { id: transaction.userId },
-            data: {
-              totalPoints: {
-                increment: transaction.pointsUsed,
-              },
-            },
-          });
-        }
-
-        // Kembalikan status kupon ke unused jika menggunakan kupon
-        if (transaction.couponId) {
-          await tx.coupon.update({
-            where: { id: transaction.couponId },
-            data: { isUsed: false },
-          });
-        }
-      });
-    }
-  } catch (error) {
-    console.error("Error in cancelUnconfirmedTransactions:", error);
+    if (didCancel) canceledCount += 1;
   }
+
+  return canceledCount;
 };
 
-// Scheduler berjalan setiap menit
-cron.schedule("* * * * *", async () => {
-  console.log("Menjalankan scheduled tasks...");
+export const runTransactionCleanup = async () => {
+  const [expired, canceled] = await Promise.all([
+    expireTransactions(),
+    cancelUnconfirmedTransactions(),
+  ]);
 
-  try {
-    await Promise.all([expireTransactions(), cancelUnconfirmedTransactions()]);
-  } catch (error) {
-    console.error("Error in scheduler:", error);
-  }
-});
+  return { expired, canceled };
+};
