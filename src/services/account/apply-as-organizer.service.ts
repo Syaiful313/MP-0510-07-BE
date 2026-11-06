@@ -12,7 +12,7 @@ interface ApplyAsOrganizerBody {
 export const applyAsOrganizerService = async (
   userId: number,
   governmentId: Express.Multer.File,
-  body: ApplyAsOrganizerBody
+  body: ApplyAsOrganizerBody,
 ) => {
   try {
     const user = await prisma.user.findFirst({

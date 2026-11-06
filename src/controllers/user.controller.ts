@@ -6,7 +6,7 @@ import { rejectUserRoleRequestService } from "../services/user/reject-user-role-
 export const getUserListsController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
@@ -35,7 +35,7 @@ export const getUserListsController = async (
 export const updateUserRoleController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await updateUserRoleService(req.body, res.locals.user.id);
@@ -48,12 +48,12 @@ export const updateUserRoleController = async (
 export const rejectUserRoleRequestController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await rejectUserRoleRequestService(
       req.body,
-      res.locals.user.id
+      res.locals.user.id,
     );
     res.status(200).send(result);
   } catch (error) {

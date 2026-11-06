@@ -8,7 +8,7 @@ import { getEventsService } from "../services/event/get-events.service";
 export const getEventsController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
@@ -30,7 +30,7 @@ export const getEventsController = async (
 export const getEventController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -43,14 +43,14 @@ export const getEventController = async (
 export const createEventController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const files = req.files as { [fieldName: string]: Express.Multer.File[] };
     const result = await createEventService(
       req.body,
       files.thumbnail?.[0],
-      res.locals.user.id
+      res.locals.user.id,
     );
     res.status(201).send(result);
   } catch (error) {
@@ -60,7 +60,7 @@ export const createEventController = async (
 export const editEventController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const files = req.files as { [fieldName: string]: Express.Multer.File[] };
@@ -68,7 +68,7 @@ export const editEventController = async (
       req.body,
       files.thumbnail?.[0],
       res.locals.user.id,
-      Number(req.params.id)
+      Number(req.params.id),
     );
 
     res.status(201).send(result);
@@ -79,7 +79,7 @@ export const editEventController = async (
 export const deleteEventController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);

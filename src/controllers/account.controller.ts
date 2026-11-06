@@ -10,7 +10,7 @@ import { getReferredByService } from "../services/account/get-referred-by.servic
 export const getProfileController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const userId = Number(res.locals.user.id);
@@ -26,7 +26,7 @@ export const getProfileController = async (
 export const getReferredByController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await getReferredByService(res.locals.user.id);
@@ -39,7 +39,7 @@ export const getReferredByController = async (
 export const getReferredUsersController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
@@ -59,7 +59,7 @@ export const getReferredUsersController = async (
 export const applyAsOrganizerController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const files = req.files as { [fieldName: string]: Express.Multer.File[] };
@@ -67,7 +67,7 @@ export const applyAsOrganizerController = async (
     const result = await applyAsOrganizerService(
       res.locals.user.id,
       files.governmentId?.[0],
-      req.body
+      req.body,
     );
     res.status(200).send(result);
   } catch (error) {
@@ -78,7 +78,7 @@ export const applyAsOrganizerController = async (
 export const applyReferralCodeController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await applyReferralCodeService(res.locals.user.id, req.body);
@@ -91,7 +91,7 @@ export const applyReferralCodeController = async (
 export const updateProfileController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const files = req.files as { [fieldName: string]: Express.Multer.File[] };
@@ -99,7 +99,7 @@ export const updateProfileController = async (
     const result = await updateProfileService(
       req.body,
       files.profilePicture?.[0],
-      res.locals.user.id
+      res.locals.user.id,
     );
     res.status(200).send(result);
   } catch (error) {
@@ -110,7 +110,7 @@ export const updateProfileController = async (
 export const changePasswordController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const userId = Number(res.locals.user.id);

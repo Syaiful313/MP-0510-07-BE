@@ -27,7 +27,7 @@ router.post(
   uploader(2).fields([{ name: "governmentId", maxCount: 1 }]),
   fileFilter,
   validateApplyAsOrganizer,
-  applyAsOrganizerController
+  applyAsOrganizerController,
 );
 router.post("/referrals/apply-code", verifyToken, applyReferralCodeController);
 router.patch(
@@ -35,13 +35,13 @@ router.patch(
   verifyToken,
   uploader(1).fields([{ name: "profilePicture", maxCount: 1 }]),
   fileFilter,
-  updateProfileController
+  updateProfileController,
 );
 router.patch(
   "/change-password",
   verifyToken,
   validateChangePassword,
-  changePasswordController
+  changePasswordController,
 );
 
 export default router;

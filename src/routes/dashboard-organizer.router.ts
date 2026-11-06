@@ -13,7 +13,7 @@ router.get("/", verifyToken, getTransactionsDataController);
 router.get(
   "/transactions",
   verifyToken,
-  getTransactionsByOrganizerIdController
+  getTransactionsByOrganizerIdController,
 );
 router.get("/event-lists", verifyToken, getEventsByOrganizerIdController);
 router.get("/attendees/:id", verifyToken, getAttendeesByEventIdController);

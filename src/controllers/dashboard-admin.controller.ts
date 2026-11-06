@@ -4,7 +4,7 @@ import { getUsersDataService } from "../services/dashboard-admin/get-users-data.
 export const getUsersDataController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {

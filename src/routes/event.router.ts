@@ -21,7 +21,7 @@ eventRouter.post(
   uploader().fields([{ name: "thumbnail", maxCount: 1 }]),
   fileFilter,
   validateCreateEvent,
-  createEventController
+  createEventController,
 );
 eventRouter.patch(
   "/:id",
@@ -29,7 +29,7 @@ eventRouter.patch(
   uploader().fields([{ name: "thumbnail", maxCount: 1 }]),
   fileFilter,
   validateCreateEvent,
-  editEventController
+  editEventController,
 );
 eventRouter.delete("/:id", verifyToken, deleteEventController);
 

@@ -5,7 +5,7 @@ interface getReferredUsersQuery extends PaginationQueryParams {}
 
 export const getReferredUsersService = async (
   userId: number,
-  query: getReferredUsersQuery
+  query: getReferredUsersQuery,
 ) => {
   try {
     const user = await prisma.user.findFirst({

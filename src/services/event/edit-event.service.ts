@@ -17,7 +17,7 @@ export const editEventService = async (
   body: EditEventBody,
   thumbnail: Express.Multer.File | undefined,
   userId: number,
-  eventId: number
+  eventId: number,
 ) => {
   try {
     const { title, price, startDate, endDate, avaliableSeats } = body;

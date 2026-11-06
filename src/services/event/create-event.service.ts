@@ -16,7 +16,7 @@ interface CreateEventBody {
 export const createEventService = async (
   body: CreateEventBody,
   thumbnail: Express.Multer.File,
-  userId: number
+  userId: number,
 ) => {
   try {
     const {

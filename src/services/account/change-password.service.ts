@@ -8,7 +8,7 @@ interface changePasswordBody {
 
 export const changePasswordService = async (
   userId: number,
-  body: changePasswordBody
+  body: changePasswordBody,
 ) => {
   try {
     const user = await prisma.user.findFirst({

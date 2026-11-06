@@ -8,7 +8,7 @@ interface RejectUserRoleRequestBody {
 
 export const rejectUserRoleRequestService = async (
   body: RejectUserRoleRequestBody,
-  userId: number
+  userId: number,
 ) => {
   try {
     const user = await prisma.user.findFirst({

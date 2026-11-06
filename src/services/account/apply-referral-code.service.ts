@@ -6,7 +6,7 @@ interface ApplyReferralCodeBody {
 }
 export const applyReferralCodeService = async (
   userId: number,
-  body: ApplyReferralCodeBody
+  body: ApplyReferralCodeBody,
 ) => {
   try {
     const user = await prisma.user.findFirst({

@@ -6,7 +6,7 @@ interface CreateRewardsBody {
 }
 export const createRewardsService = async (
   userId: number,
-  body: CreateRewardsBody
+  body: CreateRewardsBody,
 ) => {
   try {
     const user = await prisma.user.findFirst({

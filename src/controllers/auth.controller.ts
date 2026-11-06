@@ -7,7 +7,7 @@ import { resetPasswordService } from "../services/auth/reset-password.service";
 export const registerController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await registerService(req.body);
@@ -19,7 +19,7 @@ export const registerController = async (
 export const loginController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await loginService(req.body);
@@ -32,7 +32,7 @@ export const loginController = async (
 export const forgotPasswordController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await forgotPasswordService(req.body);
@@ -45,7 +45,7 @@ export const forgotPasswordController = async (
 export const resetPasswordController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const userId = Number(res.locals.user.id);

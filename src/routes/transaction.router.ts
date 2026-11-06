@@ -18,7 +18,7 @@ router.patch(
   verifyToken,
   uploader().single("paymentProof"),
   fileFilter,
-  PaymentProofController
+  PaymentProofController,
 );
 router.patch("/update", verifyToken, updateTransactionController);
 

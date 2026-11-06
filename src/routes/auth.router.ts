@@ -20,13 +20,13 @@ router.post("/login", validateLogin, loginController);
 router.post(
   "/forgot-password",
   validateForgotPassword,
-  forgotPasswordController
+  forgotPasswordController,
 );
 router.patch(
   "/reset-password",
   verifyTokenReset,
   validateResetPassword,
-  resetPasswordController
+  resetPasswordController,
 );
 
 export default router;

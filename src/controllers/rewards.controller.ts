@@ -6,7 +6,7 @@ import { getRewardsService } from "../services/rewards/get-rewards.service";
 export const getRewardsController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await getRewardsService(res.locals.user.id);
@@ -19,7 +19,7 @@ export const getRewardsController = async (
 export const createRewardsController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await createRewardsService(res.locals.user.id, req.body);
@@ -32,7 +32,7 @@ export const createRewardsController = async (
 export const updateRewardsController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await updateRewardsService(res.locals.user.id, req.body);

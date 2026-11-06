@@ -14,14 +14,14 @@ cloudinary.config({
 });
 
 export const cloudinaryUpload = (
-  file: Express.Multer.File
+  file: Express.Multer.File,
 ): Promise<UploadApiResponse> => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       (error, result: UploadApiResponse) => {
         if (error) return reject(error);
         resolve(result);
-      }
+      },
     );
     streamifier.createReadStream(file.buffer).pipe(uploadStream);
   });

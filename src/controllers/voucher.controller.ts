@@ -6,7 +6,7 @@ import { getVouchersService } from "../services/voucher/get-vouchers.service";
 export const getVoucherController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -19,7 +19,7 @@ export const getVoucherController = async (
 export const getVouchersController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await getVouchersService();
@@ -31,7 +31,7 @@ export const getVouchersController = async (
 export const createVoucherController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await createVoucherService(req.body);

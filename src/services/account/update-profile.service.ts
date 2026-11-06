@@ -8,7 +8,7 @@ interface UpdateProfileBody {
 export const updateProfileService = async (
   body: UpdateProfileBody,
   profilePicture: Express.Multer.File | undefined,
-  userId: number
+  userId: number,
 ) => {
   try {
     const user = await prisma.user.findFirst({
