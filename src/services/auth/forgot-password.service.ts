@@ -1,9 +1,8 @@
-import { User } from "@prisma/client";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { BASE_URL_FE, JWT_SECRET_FORGOT_PASSWORD } from "../../config";
-import { transporter } from "../../lib/nodemailer";
-import prisma from "../../lib/prisma";
+import { User } from "../../generated/prisma/client";
 import { sendForgotPasswordEmail } from "../../lib/handlebars";
+import prisma from "../../lib/prisma";
 
 export const forgotPasswordService = async (body: Pick<User, "email">) => {
   try {
@@ -15,7 +14,7 @@ export const forgotPasswordService = async (body: Pick<User, "email">) => {
       throw new Error("Invalid email address");
     }
 
-    const token = sign({ id: user.id }, JWT_SECRET_FORGOT_PASSWORD!, {
+    const token = jwt.sign({ id: user.id }, JWT_SECRET_FORGOT_PASSWORD!, {
       expiresIn: "15m",
     });
 

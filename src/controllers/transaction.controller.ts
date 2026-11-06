@@ -2,15 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import { createTransaction } from "../services/transaction/create-transaction.service";
 import { getTransactionService } from "../services/transaction/get-transaction.service";
 import { PaymentProofService } from "../services/transaction/payment-proof.service";
-import { PrismaClient } from "@prisma/client";
 import { updateTransactionService } from "../services/transaction/update-transaction.service";
-
-const prisma = new PrismaClient();
 
 export const createTransactionController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const userIdFromToken = res.locals.user.id;
@@ -41,7 +38,7 @@ export const createTransactionController = async (
 export const getTransactionController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -55,7 +52,7 @@ export const getTransactionController = async (
 export const PaymentProofController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const proofFile = req.file as Express.Multer.File;
@@ -88,7 +85,7 @@ export const PaymentProofController = async (
 export const updateTransactionController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await updateTransactionService(res.locals.user.id, req.body);

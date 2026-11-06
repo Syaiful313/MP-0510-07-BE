@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../../generated/prisma/client";
 import { PaginationQueryParams } from "../../types/pagination";
 import prisma from "../../lib/prisma";
 
@@ -10,7 +10,7 @@ interface GetEventQuery extends PaginationQueryParams {
 
 export const getEventsService = async (query: GetEventQuery) => {
   try {
-    const { page, sortBy, sortOrder, take, search , category , location} = query;
+    const { page, sortBy, sortOrder, take, search, category, location } = query;
 
     const whereClause: Prisma.EventWhereInput = {
       deletedAt: null,

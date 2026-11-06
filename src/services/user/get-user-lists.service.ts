@@ -1,4 +1,4 @@
-import { Prisma, Role } from "@prisma/client";
+import { Prisma, Role } from "../../generated/prisma/client";
 import { PaginationQueryParams } from "../../types/pagination";
 import prisma from "../../lib/prisma";
 
@@ -36,7 +36,7 @@ export const getUserListsService = async (query: GetUserListsQuery) => {
         {
           role: {
             in: Object.values(Role).filter((role) =>
-              role.toLowerCase().includes(search.toLowerCase())
+              role.toLowerCase().includes(search.toLowerCase()),
             ),
           },
         },

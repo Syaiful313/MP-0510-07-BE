@@ -1,11 +1,17 @@
 {
   "name": "template-express-prisma",
   "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "main": "index.js",
   "scripts": {
+    "postinstall": "prisma generate",
     "build": "tsc",
-    "start": "npm run build && node dist/index.js",
-    "dev": "nodemon src/index.ts"
+    "format": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern \"src/**/*\" \"api/**/*\" \"*.json\" \"*.ts\" && prisma format",
+    "start": "tsx src/index.ts",
+    "dev": "nodemon --exec tsx src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -18,16 +24,20 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.1",
+    "@types/pg": "^8.15.5",
     "@types/node-cron": "^3.0.11",
     "@types/node-schedule": "^2.1.7",
     "@types/nodemailer": "^6.4.17",
     "@types/streamifier": "^0.1.2",
     "nodemon": "^3.1.7",
+    "prettier": "3.9.10",
+    "tsx": "^4.20.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@prisma/client": "^6.0.1",
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
     "argon2": "^0.41.1",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",
@@ -41,7 +51,8 @@
     "node-cron": "^4.6.0",
     "node-schedule": "^2.1.1",
     "nodemailer": "^10.3.1",
-    "prisma": "^6.0.1",
+    "pg": "^8.16.3",
+    "prisma": "^7.0.0",
     "serverless-http": "^3.2.0",
     "streamifier": "^0.1.1"
   }

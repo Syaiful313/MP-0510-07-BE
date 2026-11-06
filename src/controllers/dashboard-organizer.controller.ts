@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import { getTransactionsDataService } from "../services/dasboard-organizer/get-transactions-data.service";
 import { getEventsByOrganizerIdService } from "../services/dasboard-organizer/get-events-by-organizer-id.service";
 import { getTransactionsByOrganizerIdService } from "../services/dasboard-organizer/get-transactions-by-organizer.service";
-import { TransactionStatus } from "@prisma/client";
+import { TransactionStatus } from "../generated/prisma/client";
 import { getAttendeesByEventIdService } from "../services/dasboard-organizer/get-attendee-by-event.service";
 
 export const getTransactionsDataController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
@@ -25,7 +25,7 @@ export const getTransactionsDataController = async (
 export const getEventsByOrganizerIdController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
@@ -37,7 +37,7 @@ export const getEventsByOrganizerIdController = async (
     };
     const results = await getEventsByOrganizerIdService(
       res.locals.user.id,
-      query
+      query,
     );
     res.status(200).send(results);
   } catch (error) {
@@ -48,7 +48,7 @@ export const getEventsByOrganizerIdController = async (
 export const getTransactionsByOrganizerIdController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
@@ -65,7 +65,7 @@ export const getTransactionsByOrganizerIdController = async (
     };
     const results = await getTransactionsByOrganizerIdService(
       res.locals.user.id,
-      query
+      query,
     );
     res.status(200).send(results);
   } catch (error) {
@@ -75,7 +75,7 @@ export const getTransactionsByOrganizerIdController = async (
 export const getAttendeesByEventIdController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const query = {
@@ -89,7 +89,7 @@ export const getAttendeesByEventIdController = async (
     const results = await getAttendeesByEventIdService(
       id,
       res.locals.user.id,
-      query
+      query,
     );
     res.status(200).send(results);
   } catch (error) {

@@ -1,6 +1,5 @@
-import { PrismaClient, TransactionStatus, Prisma } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { TransactionStatus } from "../../generated/prisma/client";
+import prisma from "../../lib/prisma";
 
 interface CreateTransactionParams {
   userId: number;
@@ -56,10 +55,12 @@ export async function createTransaction({
       if (user.totalPoints < pointsUsed) {
         throw new Error("Poin tidak mencukupi");
       }
-      
+
       const maxPointsUsage = Math.floor(event.price * quantity * 0.5);
       if (pointsUsed > maxPointsUsage) {
-        throw new Error(`Maksimum penggunaan poin adalah ${maxPointsUsage} poin`);
+        throw new Error(
+          `Maksimum penggunaan poin adalah ${maxPointsUsage} poin`,
+        );
       }
     }
 
@@ -70,7 +71,7 @@ export async function createTransaction({
           code: couponCode,
           isUsed: false,
           expiresAt: { gte: new Date() },
-          userId: userId, 
+          userId: userId,
         },
       });
       if (!coupon) {
@@ -83,7 +84,7 @@ export async function createTransaction({
       voucher = await tx.voucher.findFirst({
         where: {
           code: voucherCode,
-          eventId: eventId, 
+          eventId: eventId,
           startDate: { lte: new Date() },
           endDate: { gte: new Date() },
         },
@@ -126,20 +127,20 @@ export async function createTransaction({
 
     await tx.event.update({
       where: { id: eventId },
-      data: { 
-        avaliableSeats: { 
-          decrement: quantity 
-        } 
+      data: {
+        avaliableSeats: {
+          decrement: quantity,
+        },
       },
     });
 
     if (pointsUsed) {
       await tx.user.update({
         where: { id: userId },
-        data: { 
-          totalPoints: { 
-            decrement: pointsUsed 
-          } 
+        data: {
+          totalPoints: {
+            decrement: pointsUsed,
+          },
         },
       });
     }

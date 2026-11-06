@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { CreateReviewDTO } from "../../dtos/review.dto";
-
-const prisma = new PrismaClient();
+import prisma from "../../lib/prisma";
 
 export class CreateReviewService {
   async execute(data: CreateReviewDTO) {

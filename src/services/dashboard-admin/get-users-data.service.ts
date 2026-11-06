@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role } from "../../generated/prisma/client";
 import prisma from "../../lib/prisma";
 
 interface GetUsersQuery {
@@ -8,7 +8,7 @@ interface GetUsersQuery {
 
 export const getUsersDataService = async (
   query: GetUsersQuery,
-  userId: number
+  userId: number,
 ) => {
   try {
     const { orderBy, year } = query;

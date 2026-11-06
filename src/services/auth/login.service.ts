@@ -1,7 +1,7 @@
-import { User } from "@prisma/client";
-import { comparePassword } from "../../lib/argon";
+import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../../config";
-import { sign } from "jsonwebtoken";
+import { User } from "../../generated/prisma/client";
+import { comparePassword } from "../../lib/argon";
 import prisma from "../../lib/prisma";
 
 interface Body extends Pick<User, "email" | "password"> {}
@@ -26,7 +26,7 @@ export const loginService = async (body: Body) => {
 
     const { password: pass, ...userWithoutPassword } = user;
 
-    const token = sign({ id: user.id }, JWT_SECRET!, { expiresIn: "2h" });
+    const token = jwt.sign({ id: user.id }, JWT_SECRET!, { expiresIn: "2h" });
 
     return { ...userWithoutPassword, token };
   } catch (error) {

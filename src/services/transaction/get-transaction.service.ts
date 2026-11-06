@@ -1,34 +1,32 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../lib/prisma";
 
 export const getTransactionService = async (id: number) => {
   try {
     const transaction = await prisma.transaction.findUnique({
       where: { id },
       include: {
-        user: { 
-          select: { 
-            fullname: true, 
-            totalPoints: true 
-          } 
+        user: {
+          select: {
+            fullname: true,
+            totalPoints: true,
+          },
         },
-        voucher: { 
-          select: { 
-            code: true, 
-            discountValue: true 
-          } 
+        voucher: {
+          select: {
+            code: true,
+            discountValue: true,
+          },
         },
-        coupon: { 
-          select: { 
-            code: true, 
-            discountValue: true 
-          } 
+        coupon: {
+          select: {
+            code: true,
+            discountValue: true,
+          },
         },
-        event: { 
-          select: { 
-            title: true 
-          } 
+        event: {
+          select: {
+            title: true,
+          },
         },
       },
     });
@@ -41,8 +39,7 @@ export const getTransactionService = async (id: number) => {
   } catch (error) {
     console.error("Error in getTransactionService:", error);
     throw new Error(
-      error instanceof Error ? error.message : "An unexpected error occurred."
+      error instanceof Error ? error.message : "An unexpected error occurred.",
     );
   }
 };
-

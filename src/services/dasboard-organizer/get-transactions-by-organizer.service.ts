@@ -1,6 +1,6 @@
-import { Prisma, TransactionStatus } from "@prisma/client";
-import { PaginationQueryParams } from "../../types/pagination";
+import { Prisma, TransactionStatus } from "../../generated/prisma/client";
 import prisma from "../../lib/prisma";
+import { PaginationQueryParams } from "../../types/pagination";
 
 interface GetTransactionsQuery extends PaginationQueryParams {
   search: string;
@@ -9,7 +9,7 @@ interface GetTransactionsQuery extends PaginationQueryParams {
 
 export const getTransactionsByOrganizerIdService = async (
   userId: number,
-  query: GetTransactionsQuery
+  query: GetTransactionsQuery,
 ) => {
   try {
     const user = await prisma.user.findFirst({

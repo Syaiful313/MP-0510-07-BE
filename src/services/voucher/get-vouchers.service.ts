@@ -1,4 +1,4 @@
-import { Voucher } from "@prisma/client";
+import { Voucher } from "../../generated/prisma/client";
 import prisma from "../../lib/prisma";
 
 export const getVouchersService = async (): Promise<Voucher[]> => {

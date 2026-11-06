@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client";
-import { PaginationQueryParams } from "../../types/pagination";
+import { Prisma } from "../../generated/prisma/client";
 import prisma from "../../lib/prisma";
+import { PaginationQueryParams } from "../../types/pagination";
 
 interface GetEventQuery extends PaginationQueryParams {
   search: string;
@@ -8,7 +8,7 @@ interface GetEventQuery extends PaginationQueryParams {
 
 export const getEventsByOrganizerIdService = async (
   userId: number,
-  query: GetEventQuery
+  query: GetEventQuery,
 ) => {
   try {
     const user = await prisma.user.findFirst({

@@ -1,4 +1,4 @@
-import { TransactionStatus } from "@prisma/client";
+import { TransactionStatus } from "../generated/prisma/client";
 import prisma from "./prisma";
 import cron from "node-cron";
 
@@ -31,10 +31,10 @@ const expireTransactions = async () => {
         // Kembalikan kursi yang tersedia sesuai quantity
         await tx.event.update({
           where: { id: transaction.eventId },
-          data: { 
-            avaliableSeats: { 
-              increment: transaction.quantity 
-            } 
+          data: {
+            avaliableSeats: {
+              increment: transaction.quantity,
+            },
           },
         });
 
@@ -44,9 +44,9 @@ const expireTransactions = async () => {
             where: { id: transaction.userId },
             data: {
               totalPoints: {
-                increment: transaction.pointsUsed
-              }
-            }
+                increment: transaction.pointsUsed,
+              },
+            },
           });
         }
 
@@ -54,13 +54,13 @@ const expireTransactions = async () => {
         if (transaction.couponId) {
           await tx.coupon.update({
             where: { id: transaction.couponId },
-            data: { isUsed: false }
+            data: { isUsed: false },
           });
         }
       });
     }
   } catch (error) {
-    console.error('Error in expireTransactions:', error);
+    console.error("Error in expireTransactions:", error);
   }
 };
 
@@ -92,10 +92,10 @@ const cancelUnconfirmedTransactions = async () => {
         // Kembalikan kursi yang tersedia sesuai quantity
         await tx.event.update({
           where: { id: transaction.eventId },
-          data: { 
-            avaliableSeats: { 
-              increment: transaction.quantity 
-            } 
+          data: {
+            avaliableSeats: {
+              increment: transaction.quantity,
+            },
           },
         });
 
@@ -105,9 +105,9 @@ const cancelUnconfirmedTransactions = async () => {
             where: { id: transaction.userId },
             data: {
               totalPoints: {
-                increment: transaction.pointsUsed
-              }
-            }
+                increment: transaction.pointsUsed,
+              },
+            },
           });
         }
 
@@ -115,26 +115,23 @@ const cancelUnconfirmedTransactions = async () => {
         if (transaction.couponId) {
           await tx.coupon.update({
             where: { id: transaction.couponId },
-            data: { isUsed: false }
+            data: { isUsed: false },
           });
         }
       });
     }
   } catch (error) {
-    console.error('Error in cancelUnconfirmedTransactions:', error);
+    console.error("Error in cancelUnconfirmedTransactions:", error);
   }
 };
 
 // Scheduler berjalan setiap menit
 cron.schedule("* * * * *", async () => {
   console.log("Menjalankan scheduled tasks...");
-  
+
   try {
-    await Promise.all([
-      expireTransactions(),
-      cancelUnconfirmedTransactions()
-    ]);
+    await Promise.all([expireTransactions(), cancelUnconfirmedTransactions()]);
   } catch (error) {
-    console.error('Error in scheduler:', error);
+    console.error("Error in scheduler:", error);
   }
 });

@@ -3,7 +3,7 @@ import prisma from "../../lib/prisma";
 
 export const resetPasswordService = async (
   userId: number,
-  password: string
+  password: string,
 ) => {
   try {
     const user = await prisma.user.findFirst({

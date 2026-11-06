@@ -1,41 +1,43 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from "../../lib/prisma";
 
 export class GetReviewService {
   async getReviewsByEvent(eventId: number) {
     try {
       const reviews = await prisma.review.findMany({
         where: {
-          eventId: eventId
+          eventId: eventId,
         },
         include: {
           user: {
             select: {
               fullname: true,
-              profilePicture: true
-            }
-          }
+              profilePicture: true,
+            },
+          },
         },
         orderBy: {
-          createdAt: 'desc'
-        }
+          createdAt: "desc",
+        },
       });
 
       // Calculate average rating
-      const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-      const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+      const totalRating = reviews.reduce(
+        (acc, review) => acc + review.rating,
+        0,
+      );
+      const averageRating =
+        reviews.length > 0 ? totalRating / reviews.length : 0;
 
       return {
-        status: 'success',
-        message: 'Reviews retrieved successfully',
+        status: "success",
+        message: "Reviews retrieved successfully",
         data: {
           reviews,
           summary: {
             totalReviews: reviews.length,
-            averageRating: parseFloat(averageRating.toFixed(1))
-          }
-        }
+            averageRating: parseFloat(averageRating.toFixed(1)),
+          },
+        },
       };
     } catch (error) {
       throw error;
@@ -46,25 +48,25 @@ export class GetReviewService {
     try {
       const reviews = await prisma.review.findMany({
         where: {
-          userId: userId
+          userId: userId,
         },
         include: {
           event: {
             select: {
               title: true,
-              thumbnail: true
-            }
-          }
+              thumbnail: true,
+            },
+          },
         },
         orderBy: {
-          createdAt: 'desc'
-        }
+          createdAt: "desc",
+        },
       });
 
       return {
-        status: 'success',
-        message: 'Reviews retrieved successfully',
-        data: reviews
+        status: "success",
+        message: "Reviews retrieved successfully",
+        data: reviews,
       };
     } catch (error) {
       throw error;
@@ -75,32 +77,32 @@ export class GetReviewService {
     try {
       const review = await prisma.review.findUnique({
         where: {
-          id: reviewId
+          id: reviewId,
         },
         include: {
           user: {
             select: {
               fullname: true,
-              profilePicture: true
-            }
+              profilePicture: true,
+            },
           },
           event: {
             select: {
               title: true,
-              thumbnail: true
-            }
-          }
-        }
+              thumbnail: true,
+            },
+          },
+        },
       });
 
       if (!review) {
-        throw new Error('Review not found');
+        throw new Error("Review not found");
       }
 
       return {
-        status: 'success',
-        message: 'Review retrieved successfully',
-        data: review
+        status: "success",
+        message: "Review retrieved successfully",
+        data: review,
       };
     } catch (error) {
       throw error;

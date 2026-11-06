@@ -1,14 +1,13 @@
-import { User } from "@prisma/client";
+import { User } from "../../generated/prisma/client";
 import { hashPassword } from "../../lib/argon";
-import { generateReferralCode } from "../../lib/referral";
 import { generateUniqueCouponCode } from "../../lib/coupon";
 import prisma from "../../lib/prisma";
+import { generateReferralCode } from "../../lib/referral";
 
-interface RegisterInput
-  extends Omit<
-    User,
-    "id" | "createdAt" | "updatedAt" | "totalPoints" | "referralCode"
-  > {
+interface RegisterInput extends Omit<
+  User,
+  "id" | "createdAt" | "updatedAt" | "totalPoints" | "referralCode"
+> {
   referralCode?: string;
 }
 export const registerService = async (body: RegisterInput) => {

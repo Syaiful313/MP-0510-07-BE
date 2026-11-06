@@ -1,11 +1,10 @@
 import { cloudinaryUpload } from "../../lib/cloudinary";
-import { PrismaClient, TransactionStatus } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { TransactionStatus } from "../../generated/prisma/client";
+import prisma from "../../lib/prisma";
 
 interface UploadPaymentProofBody {
   transactionId: number;
-  paymentProof: any; 
+  paymentProof: any;
 }
 
 export const PaymentProofService = async ({
@@ -33,7 +32,9 @@ export const PaymentProofService = async ({
     }
 
     if (transaction.status !== TransactionStatus.WAITING_FOR_PAYMENT) {
-      throw new Error("Only transactions waiting for payment can upload payment proof.");
+      throw new Error(
+        "Only transactions waiting for payment can upload payment proof.",
+      );
     }
 
     const updatedTransaction = await prisma.transaction.update({
@@ -48,8 +49,7 @@ export const PaymentProofService = async ({
   } catch (error) {
     console.error("Error in PaymentProofService:", error);
     throw new Error(
-      error instanceof Error ? error.message : "An unexpected error occurred."
+      error instanceof Error ? error.message : "An unexpected error occurred.",
     );
   }
 };
-

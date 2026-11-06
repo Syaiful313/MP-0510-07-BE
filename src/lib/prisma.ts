@@ -1,5 +1,16 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";
 
-export default new PrismaClient({
-  //   log: ["error", "info", "query", "warn"],
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is required to connect to PostgreSQL");
+}
+
+const adapter = new PrismaPg({
+  connectionString,
+  max: 1,
+  connectionTimeoutMillis: 5000,
 });
+
+export default new PrismaClient({ adapter });

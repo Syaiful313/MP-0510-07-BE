@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role } from "../../generated/prisma/client";
 import prisma from "../../lib/prisma";
 
 interface UpdateUserRoleBody {
@@ -7,7 +7,7 @@ interface UpdateUserRoleBody {
 
 export const updateUserRoleService = async (
   body: UpdateUserRoleBody,
-  userId: number
+  userId: number,
 ) => {
   try {
     const user = await prisma.user.findFirst({

@@ -1,4 +1,4 @@
-import { TransactionStatus } from "@prisma/client";
+import { TransactionStatus } from "../../generated/prisma/client";
 import prisma from "../../lib/prisma";
 import { sendTransactionEmail } from "../../lib/handlebars";
 
@@ -9,7 +9,7 @@ interface UpdateTransactionsBody {
 }
 export const updateTransactionService = async (
   userId: number,
-  body: UpdateTransactionsBody
+  body: UpdateTransactionsBody,
 ) => {
   try {
     const user = await prisma.user.findFirst({

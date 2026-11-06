@@ -7,7 +7,7 @@ interface GetTransactionsQuery {
 
 export const getTransactionsDataService = async (
   query: GetTransactionsQuery,
-  userId: number
+  userId: number,
 ) => {
   try {
     const { orderBy, year } = query;
